@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Poppins, Trirong } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/custom/Navbar";
 import { Footer } from "@/components/custom/Footer";
 import { WhatsAppFloatingButton } from "@/components/custom/WhatsAppFloatingButton";
 
-const inter = Inter({
-  variable: "--font-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-serif",
+const trirong = Trirong({
+  variable: "--font-trirong",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -28,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} scroll-smooth`}
+      className={`${poppins.variable} ${trirong.variable} scroll-smooth`}
     >
       <body className="min-h-screen font-sans bg-background text-foreground flex flex-col">
         <Navbar />

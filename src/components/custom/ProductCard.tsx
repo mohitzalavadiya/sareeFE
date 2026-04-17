@@ -2,76 +2,76 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { getWhatsAppUrl, getProductInquiryMessage } from "@/lib/whatsapp";
 
 interface ProductCardProps {
   id: string;
   name: string;
   price: string;
+  oldPrice?: string;
   image: string;
-  category: string;
+  hoverImage?: string;
+  category?: string;
   isTrending?: boolean;
 }
 
-export function ProductCard({ id, name, price, image, category, isTrending }: ProductCardProps) {
-  const whatsappUrl = getWhatsAppUrl(getProductInquiryMessage(name, price));
-
+export function ProductCard({ id, name, price, oldPrice, image, hoverImage }: ProductCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
+      className="group relative flex flex-col h-full bg-white"
     >
-      <Card className="overflow-hidden border-none shadow-md group">
-        <div className="relative aspect-[3/4] overflow-hidden">
+      <Link href={`/product/${id}`} className="flex flex-col h-full">
+        <div className="relative aspect-[2/3] overflow-hidden bg-[#f4f4f4] mb-3 md:mb-4 group/image">
+          {/* Secondary Hover Image */}
+          {hoverImage && (
+            <Image
+              src={hoverImage}
+              alt={`${name} hover view`}
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="object-cover transition-transform duration-[600ms] ease-out group-hover:scale-105"
+            />
+          )}
+
+          {/* Primary Image */}
           <Image
             src={image}
             alt={name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 50vw, 25vw"
+            className={`object-cover transition-all duration-[600ms] ease-out group-hover:scale-105 ${
+              hoverImage ? "group-hover/image:opacity-0 relative z-10" : ""
+            }`}
           />
-          {isTrending && (
-            <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground">
-              Trending
-            </Badge>
+          
+          {/* Sale Badge: Dawn Theme style (Bottom Left) */}
+          {oldPrice && (
+            <div className="absolute bottom-3 left-3 bg-[#f25e41] text-white text-[11px] font-semibold px-2.5 py-1 tracking-wider leading-none rounded-[2px] uppercase z-20">
+              Sale
+            </div>
           )}
-          <button className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-            <Heart size={18} />
-          </button>
         </div>
-        <CardContent className="p-4 bg-white">
-          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">
-            {category}
-          </p>
-          <h3 className="font-serif text-lg font-semibold line-clamp-1 mb-2 group-hover:text-primary transition-colors">
+
+        <div className="flex flex-col text-left px-1">
+          <h3 className="text-[13px] md:text-[15px] font-normal font-sans leading-[1.3] text-[#121212] hover:underline mb-1.5 md:mb-2 line-clamp-2">
             {name}
           </h3>
-          <p className="text-primary font-bold text-xl">{price}</p>
-        </CardContent>
-        <CardFooter className="p-4 pt-0 bg-white grid grid-cols-2 gap-2">
-          <Link 
-            href={`/product/${id}`} 
-            className="flex h-9 w-full items-center justify-center rounded-md border border-input bg-background px-3 text-xs font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
-          >
-            View Details
-          </Link>
-          <a 
-            href={whatsappUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex h-9 w-full items-center justify-center rounded-md bg-[#25D366] px-3 text-xs font-medium text-white hover:bg-[#1fb355] transition-colors gap-1"
-          >
-            <MessageCircle size={14} /> Buy
-          </a>
-        </CardFooter>
-      </Card>
+          <div className="flex items-center gap-1.5 md:gap-2 mt-auto">
+            {oldPrice ? (
+               <>
+                 <span className="text-[13px] md:text-[14px] text-[#121212] font-normal line-through opacity-70">{oldPrice}</span>
+                 <span className="text-[13px] md:text-[14px] font-semibold text-[#121212]">{price}</span>
+               </>
+            ) : (
+               <span className="text-[13px] md:text-[14px] font-normal text-[#121212]">{price}</span>
+            )}
+          </div>
+        </div>
+      </Link>
     </motion.div>
   );
 }
+
