@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ShoppingBag } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 interface ProductCardProps {
   id: string;
@@ -11,11 +13,18 @@ interface ProductCardProps {
   oldPrice?: string;
   image: string;
   hoverImage?: string;
-  category?: string;
   isTrending?: boolean;
 }
 
 export function ProductCard({ id, name, price, oldPrice, image, hoverImage }: ProductCardProps) {
+  const { addItem } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({ id, name, price, image, originalPrice: oldPrice });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -46,6 +55,26 @@ export function ProductCard({ id, name, price, oldPrice, image, hoverImage }: Pr
               hoverImage ? "group-hover/image:opacity-0 relative z-10" : ""
             }`}
           />
+          
+          {/* Quick Add Button: Appears on Hover */}
+          <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover/image:translate-y-0 transition-transform duration-300 z-30 hidden md:block">
+            <button 
+              type="button"
+              onClick={handleAddToCart}
+              className="w-full bg-white text-black py-2.5 text-[11px] font-bold uppercase tracking-widest border border-gray-100 shadow-lg hover:bg-black hover:text-white transition-all duration-200 rounded-[2px]"
+            >
+              Quick Add
+            </button>
+          </div>
+
+          {/* Mobile Quick Add Button */}
+          <button 
+            type="button"
+            onClick={handleAddToCart}
+            className="absolute bottom-2 right-2 bg-white/90 p-2 rounded-full shadow-md md:hidden z-30"
+          >
+            <ShoppingBag size={18} />
+          </button>
           
           {/* Sale Badge: Dawn Theme style (Bottom Left) */}
           {oldPrice && (

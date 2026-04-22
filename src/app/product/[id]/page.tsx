@@ -24,10 +24,12 @@ import { SectionHeader } from "@/components/custom/SectionHeader";
 import { NEW_ARRIVALS, SHOP_DETAILS } from "@/lib/constants";
 import { getWhatsAppUrl, getProductInquiryMessage } from "@/lib/whatsapp";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductPage() {
   const params = useParams();
   const id = params.id as string;
+  const { addItem, updateQuantity: updateCartQuantity, items } = useCart();
   
   // Find product in any list
   const product = NEW_ARRIVALS.find((p) => p.id === id) || NEW_ARRIVALS[0];
@@ -158,7 +160,10 @@ export default function ProductPage() {
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3 mb-10">
-             <button className="w-full h-[50px] bg-[#EBC155] text-black font-medium hover:opacity-90 transition-all uppercase tracking-widest text-[13px] border border-[#EBC155]">
+             <button 
+               onClick={() => addItem({ ...product, quantity })}
+               className="w-full h-[50px] bg-[#EBC155] text-black font-medium hover:opacity-90 transition-all uppercase tracking-widest text-[13px] border border-[#EBC155]"
+             >
                Add to Cart
              </button>
              <button className="w-full h-[50px] bg-black text-white font-medium hover:bg-[#121212] transition-all uppercase tracking-widest text-[13px]">

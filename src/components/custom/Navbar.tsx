@@ -21,8 +21,11 @@ const navLinks = [
 
 
 
+import { useCart } from "@/context/CartContext";
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { toggleCart, totalItems } = useCart();
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white">
@@ -79,9 +82,14 @@ export function Navbar() {
             <button className="hidden sm:block text-black hover:opacity-70 transition-opacity">
               <User size={22} strokeWidth={1.25} />
             </button>
-            <button className="text-black hover:opacity-70 transition-opacity relative">
+            <button 
+              onClick={toggleCart}
+              className="text-black hover:opacity-70 transition-opacity relative"
+            >
               <ShoppingBag size={22} strokeWidth={1.25} />
-              <span className="absolute -bottom-1 -right-1 bg-black text-white text-[8px] rounded-full h-3.5 w-3.5 flex items-center justify-center font-bold">0</span>
+              <span className="absolute -bottom-1 -right-1 bg-black text-white text-[8px] rounded-full h-3.5 w-3.5 flex items-center justify-center font-bold">
+                {totalItems}
+              </span>
             </button>
           </div>
         </div>

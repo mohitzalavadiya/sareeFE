@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/custom/Navbar";
 import { Footer } from "@/components/custom/Footer";
 import { WhatsAppFloatingButton } from "@/components/custom/WhatsAppFloatingButton";
+import Script from "next/script";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -22,6 +23,9 @@ export const metadata: Metadata = {
   description: "Explore the finest collection of Bridal, Silk, Designer, and Party Wear sarees from Surat. Book a video call consultation and shop via WhatsApp.",
 };
 
+import { CartProvider } from "@/context/CartContext";
+import { CartDrawer } from "@/components/custom/CartDrawer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,10 +37,14 @@ export default function RootLayout({
       className={`${poppins.variable} ${trirong.variable} scroll-smooth`}
     >
       <body className="min-h-screen font-sans bg-background text-foreground flex flex-col">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <WhatsAppFloatingButton />
+        <CartProvider>
+          <Navbar />
+          <CartDrawer />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+          <WhatsAppFloatingButton />
+          <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+        </CartProvider>
       </body>
     </html>
   );
